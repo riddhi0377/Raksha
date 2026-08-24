@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-navy-850 text-slate-200 font-sans antialiased;
+    margin: 0;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(56, 189, 248, 0.25);
+    background-clip: padding-box;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/[0.025] backdrop-blur-xl border border-white/[0.06];
+  }
+
+  .glass-strong {
+    @apply bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08];
+  }
+
+  .panel {
+    @apply glass rounded-xl shadow-panel;
+  }
+
+  .label-mono {
+    @apply font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500;
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-1 focus-visible:ring-accent/60;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid {
+    background-image: theme("backgroundImage.grid");
+    background-size: 38px 38px;
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
+}
+
+@keyframes raksha-pulse {
+  0% {
+    box-shadow: 0 0 0 2px rgba(4, 18, 31, 0.85), 0 0 0 0 rgba(244, 63, 94, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 2px rgba(4, 18, 31, 0.85), 0 0 0 10px rgba(244, 63, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(4, 18, 31, 0.85), 0 0 0 0 rgba(244, 63, 94, 0);
+  }
+}
+
+.raksha-site-active {
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.9), 0 0 14px #22d3ee !important;
+}
+
+.raksha-popup .maplibregl-popup-content,
+.raksha-popup .mapboxgl-popup-content {
+  background: #0e1320;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  color: #e2e8f0;
+  font-family: inherit;
+}
+
+.raksha-popup .maplibregl-popup-tip,
+.raksha-popup .mapboxgl-popup-tip {
+  border-top-color: #0e1320;
+  border-bottom-color: #0e1320;
+}
+
+.raksha-popup .maplibregl-popup-close-button,
+.raksha-popup .mapboxgl-popup-close-button {
+  color: #94a3b8;
+  font-size: 16px;
+  padding: 4px 7px;
+}
+
+.raksha-pop {
+  padding: 12px 14px;
+  min-width: 200px;
+}
+
+.raksha-pop-h {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.raksha-pop-sub {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.raksha-pop-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.raksha-pop-grid > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.raksha-pop-grid span {
+  font-size: 9px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.raksha-pop-grid b {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.raksha-tip {
+  position: absolute;
+  z-index: 30;
+  transform: translate(12px, 12px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: rgba(14, 19, 32, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  color: #e2e8f0;
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.raksha-tip b {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.hab-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px 2px 2px 2px;
+  background: linear-gradient(#facc15, #facc15);
+  position: relative;
+  border: 1px solid rgba(4, 18, 31, 0.9);
+  clip-path: polygon(50% 0, 100% 42%, 100% 100%, 0 100%, 0 42%);
+}
+
+.site-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #22d3ee;
+  border: 1px solid rgba(4, 18, 31, 0.9);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
