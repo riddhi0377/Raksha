@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import type { FeatureCollection } from "geojson";
 import type { Habitat, RelocationSite, HazardZone } from "../lib/data";
 import { formatNumber } from "../lib/utils";
+import "maplibre-gl/dist/maplibre-gl.css";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const TOKEN = (import.meta.env.VITE_MAPBOX_TOKEN as string | undefined) || undefined;
 
@@ -144,18 +146,16 @@ function loadGl() {
   if (TOKEN) {
     return import("mapbox-gl").then((m) => ({
       gl: (m as any).default ?? m,
-      css: import("mapbox-gl/dist/mapbox-gl.css"),
       mapbox: true,
     }));
   }
   return import("maplibre-gl").then((m) => ({
     gl: (m as any).default ?? m,
-    css: import("maplibre-gl/dist/maplibre-gl.css"),
     mapbox: false,
   }));
 }
 
-function makeIconImage(shape: "house" | "diamond", color: string, size = 64): ImageData {
+function makeIconImage(shape: "house" | "diamond", color: string, size = 64): { width: number; height: number; data: Uint8Array } {
   const c = document.createElement("canvas");
   c.width = size;
   c.height = size;
@@ -191,7 +191,8 @@ function makeIconImage(shape: "house" | "diamond", color: string, size = 64): Im
     x.closePath();
     x.fill();
   }
-  return x.getImageData(0, 0, size, size);
+  const img = x.getImageData(0, 0, size, size);
+  return { width: size, height: size, data: new Uint8Array(img.data.buffer) };
 }
 
 function habPopupHTML(h: Habitat): string {
@@ -272,8 +273,7 @@ export function GisMap({
     let cancelled = false;
     let ro: ResizeObserver | null = null;
     (async () => {
-      const { gl, css, mapbox } = await loadGl();
-      await css;
+      const { gl, mapbox } = await loadGl();
       if (cancelled || !containerRef.current) return;
       glRef.current = gl;
       if (mapbox) gl.accessToken = TOKEN;
@@ -298,10 +298,14 @@ export function GisMap({
       map.on("load", () => {
         if (cancelled) return;
 
-        RAMP.forEach((r) =>
-          map.addImage(`rk-hab-${r.key}`, makeIconImage("house", r.color), { pixelRatio: 2 })
-        );
-        map.addImage("rk-site", makeIconImage("diamond", C.site), { pixelRatio: 2 });
+        try {
+          RAMP.forEach((r) =>
+            map.addImage(`rk-hab-${r.key}`, makeIconImage("house", r.color), { pixelRatio: 2 })
+          );
+          map.addImage("rk-site", makeIconImage("diamond", C.site), { pixelRatio: 2 });
+        } catch (err) {
+          console.warn("[GisMap] icon images failed", err);
+        }
 
         const habFC: FeatureCollection = {
           type: "FeatureCollection",
@@ -429,7 +433,7 @@ export function GisMap({
           filter: ["!", ["has", "point_count"]],
           layout: {
             "icon-image": ["match", ["get", "bucket"], "critical", "rk-hab-critical", "high", "rk-hab-high", "moderate", "rk-hab-moderate", "low", "rk-hab-low", "safe", "rk-hab-safe", "rk-hab-moderate"],
-            "icon-size": ["case", ["boolean", ["feature-state", "selected"], false], 1.5, ["interpolate", ["linear"], ["get", "score"], 0, 0.52, 100, 0.95]],
+            "icon-size": ["interpolate", ["linear"], ["get", "score"], 0, 0.52, 100, 0.95],
             "icon-allow-overlap": true,
             "icon-ignore-placement": true,
           },
@@ -441,7 +445,7 @@ export function GisMap({
           source: "site",
           layout: {
             "icon-image": "rk-site",
-            "icon-size": ["case", ["boolean", ["feature-state", "selected"], false], 1.4, ["case", ["boolean", ["feature-state", "recommended"], false], 1.2, 0.8]],
+            "icon-size": 0.85,
             "icon-allow-overlap": true,
             "icon-ignore-placement": true,
           },
@@ -729,7 +733,7 @@ export function GisMap({
   ];
 
   return (
-    <div className="relative h-full w-full min-h-[440px] overflow-hidden rounded-xl border border-white/[0.06]">
+    <div className="relative h-[460px] w-full overflow-hidden rounded-xl border border-white/[0.06] bg-navy-900 xl:h-[680px]">
       <div ref={containerRef} className="absolute inset-0" />
       <div ref={tipRef} className="raksha-tip" />
 

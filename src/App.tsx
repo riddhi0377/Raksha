@@ -4,6 +4,7 @@ import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
 import { JourneyBar } from "./components/JourneyBar";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { StartupIntro } from "./components/StartupIntro";
 import { navItems } from "./nav";
 import { Dashboard } from "./components/views/Dashboard";
 import { HazardIntelligence } from "./components/views/HazardIntelligence";
@@ -28,6 +29,7 @@ const views: Record<string, ComponentType<{ onNavigate: (id: string) => void }>>
 export default function App() {
   const [active, setActive] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   const ActiveView = views[active];
   const activeLabel = navItems.find((n) => n.id === active)?.label ?? "Command Center";
@@ -67,6 +69,8 @@ export default function App() {
           </AnimatePresence>
         </main>
       </div>
+
+      <AnimatePresence>{showIntro && <StartupIntro onDone={() => setShowIntro(false)} />}</AnimatePresence>
     </div>
   );
 }

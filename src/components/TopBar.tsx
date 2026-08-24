@@ -31,16 +31,6 @@ export function TopBar({ activeLabel, onToggleSidebar }: TopBarProps) {
           <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           {DEMO_LABEL}
         </span>
-
-        <div className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] py-1 pl-1 pr-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-accent-deep to-accent-blue text-xs font-bold text-navy-950">
-            AD
-          </div>
-          <div className="hidden text-left leading-tight sm:block">
-            <div className="text-xs font-medium text-slate-100">A. Das</div>
-            <div className="text-[10px] text-slate-500">Operations Lead</div>
-          </div>
-        </div>
       </div>
     </header>
   );

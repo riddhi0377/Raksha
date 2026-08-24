@@ -208,3 +208,14 @@
   border: 1px solid rgba(4, 18, 31, 0.9);
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
+
+/* Ensure the GL map element always fills its container (MapLibre/Mapbox only
+   size it via CSS; if that fails to load the canvas collapses to 0 height). */
+.maplibregl-map,
+.mapboxgl-map {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
